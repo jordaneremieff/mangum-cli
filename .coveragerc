@@ -1,0 +1,5 @@
+[run]
+source =
+    mangum_cli
+omit =
+    tests/*
