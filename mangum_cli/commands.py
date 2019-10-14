@@ -39,7 +39,15 @@ def get_default_region_name() -> str:  # pragma: no cover
 @click.argument("name", required=True)
 @click.argument("bucket_name", required=False)
 @click.argument("region_name", required=False)
-def init(name: str, bucket_name: str = None, region_name: str = None) -> None:
+@click.option("--s3-access/--no-s3-access", default=True)
+@click.option("--dynamodb-access/--no-dynamodb-access", default=True)
+def init(
+    name: str,
+    bucket_name: str = None,
+    region_name: str = None,
+    s3_access: bool = True,
+    dynamodb_access: bool = True,
+) -> None:
     """
     Create a new deployment configuration.
 
@@ -57,6 +65,13 @@ def init(name: str, bucket_name: str = None, region_name: str = None) -> None:
         - region_name
             Specify the region to use for the deployment.
 
+    Optional flags:
+
+        --s3-access/--no-s3-access
+            Specify if the CF template should include S3 access (full access to all buckets).
+
+        --dynamodb-access/--no-dynamodb-access
+            Specify if the CF template should include DynamoDB access (full access to all db)
     """
     click.echo("Generating initial configuration...")
     config_dir = os.getcwd()
@@ -68,6 +83,8 @@ def init(name: str, bucket_name: str = None, region_name: str = None) -> None:
         "region_name": region_name,
         "websockets": False,
         "timeout": 300,
+        "s3_access": s3_access,
+        "dynamodb_access": dynamodb_access,
     }
     with open(os.path.join(config_dir, "mangum.yml"), "w") as f:
         config_data = yaml.dump(config, default_flow_style=False, sort_keys=False)

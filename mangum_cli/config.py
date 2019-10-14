@@ -34,6 +34,8 @@ class Config:
     region_name: str
     timeout: int
     websockets: bool
+    s3_access: bool
+    dynamodb_access: bool
 
     def __post_init__(self) -> None:
         self.logger = get_logger()
@@ -565,6 +567,36 @@ class Config:
                 },
             },
         )
+
+        iam_policy_statements = [
+            {
+                "Effect": "Allow",
+                "Action": ["execute-api:ManageConnections"],
+                "Resource": ["arn:aws:execute-api:::*", "arn:aws:execute-api:::*/*"]
+                # "Resource": [
+                #     {
+                #         "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ASGIWebSocketApi}/*"
+                #     }
+                # ],
+            }
+        ]
+        if self.s3_access:
+            iam_policy_statements.append(
+                {
+                    "Effect": "Allow",
+                    "Action": ["s3:*"],
+                    "Resource": ["arn:aws:s3:::*", "arn:aws:s3:::*/*"],
+                }
+            )
+        if self.dynamodb_access:
+            iam_policy_statements.append(
+                {
+                    "Effect": "Allow",
+                    "Action": "dynamodb:*",
+                    "Resource": ["arn:aws:dynamodb:::*", "arn:aws:dynamodb:::*/*"],
+                }
+            )
+
         self.add_resource(
             HTTP_FUNCTION_IAM_POLICY,
             definition={
@@ -573,34 +605,7 @@ class Config:
                     "PolicyName": "root",
                     "PolicyDocument": {
                         "Version": "2012-10-17",
-                        "Statement": [
-                            {
-                                "Effect": "Allow",
-                                "Action": ["s3:*"],
-                                "Resource": ["arn:aws:s3:::*", "arn:aws:s3:::*/*"],
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "dynamodb:*",
-                                "Resource": [
-                                    "arn:aws:dynamodb:::*",
-                                    "arn:aws:dynamodb:::*/*",
-                                ],
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": ["execute-api:ManageConnections"],
-                                "Resource": [
-                                    "arn:aws:execute-api:::*",
-                                    "arn:aws:execute-api:::*/*",
-                                ]
-                                # "Resource": [
-                                #     {
-                                #         "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ASGIWebSocketApi}/*"
-                                #     }
-                                # ],
-                            },
-                        ],
+                        "Statement": iam_policy_statements,
                     },
                     "Roles": [{"Ref": HTTP_FUNCTION_IAM_ROLE}],
                 },
