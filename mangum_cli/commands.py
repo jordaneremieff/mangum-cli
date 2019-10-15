@@ -89,7 +89,7 @@ def init(
     with open(os.path.join(config_dir, "mangum.yml"), "w") as f:
         config_data = yaml.dump(config, default_flow_style=False, sort_keys=False)
         f.write(config_data)
-    with open(os.path.join(config_dir, "requirements.txt"), "w") as f:
+    with open(os.path.join(config_dir, "requirements.txt"), "a") as f:
         f.write("mangum\n")
     click.echo(f"Configuration saved to: {config_dir}")
 
