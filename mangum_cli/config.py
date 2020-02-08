@@ -32,6 +32,7 @@ class Config:
     handler: str
     bucket_name: str
     region_name: str
+    runtime: str
     timeout: int
     websockets: bool
     s3_access: bool
@@ -261,7 +262,7 @@ class Config:
                         "CodeUri": self.build_dir,
                         "Handler": self.handler,
                         "MemorySize": 256,
-                        "Runtime": "python3.7",
+                        "Runtime": self.runtime,
                         "Environment": {
                             "Variables": {"TABLE_NAME": {"Ref": "TableName"}}
                         },
@@ -323,7 +324,7 @@ class Config:
                         "CodeUri": self.build_dir,
                         "Handler": self.handler,
                         "MemorySize": 256,
-                        "Runtime": "python3.7",
+                        "Runtime": self.runtime,
                         "Environment": {
                             "Variables": {"TABLE_NAME": {"Ref": "TableName"}}
                         },
@@ -386,7 +387,7 @@ class Config:
                         "CodeUri": self.build_dir,
                         "Handler": self.handler,
                         "MemorySize": 256,
-                        "Runtime": "python3.7",
+                        "Runtime": self.runtime,
                         "Environment": {
                             "Variables": {"TABLE_NAME": {"Ref": "TableName"}}
                         },
@@ -563,7 +564,7 @@ class Config:
                 "Properties": {
                     "CodeUri": self.build_dir,
                     "Handler": self.handler,
-                    "Runtime": "python3.7",
+                    "Runtime": self.runtime,
                     "Environment": {"Variables": env_vars},
                     "Events": {
                         "ProxyApiRoot": {

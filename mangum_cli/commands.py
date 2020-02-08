@@ -39,12 +39,14 @@ def get_default_region_name() -> str:  # pragma: no cover
 @click.argument("name", required=True)
 @click.argument("bucket_name", required=False)
 @click.argument("region_name", required=False)
+@click.argument("runtime", required=False, default='python3.7')
 @click.option("--s3-access/--no-s3-access", default=True)
 @click.option("--dynamodb-access/--no-dynamodb-access", default=True)
 def init(
     name: str,
     bucket_name: str = None,
     region_name: str = None,
+    runtime: str = None,
     s3_access: bool = True,
     dynamodb_access: bool = True,
 ) -> None:
@@ -65,6 +67,9 @@ def init(
         - region_name
             Specify the region to use for the deployment.
 
+        - runtime
+            Specify the runtime version.
+
     Optional flags:
 
         --s3-access/--no-s3-access
@@ -81,6 +86,7 @@ def init(
         "handler": "asgi.handler",
         "bucket_name": bucket_name,
         "region_name": region_name,
+        "runtime": runtime,
         "websockets": False,
         "timeout": 300,
         "s3_access": s3_access,
