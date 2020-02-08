@@ -11,7 +11,7 @@ from pathlib import Path
 
 import boto3
 
-import yam
+import yaml
 
 
 def get_logger() -> logging.Logger:
