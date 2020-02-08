@@ -163,6 +163,17 @@ class Config:
             return str(exc)
         return None
 
+    def delete(self) -> bool:
+        cmd = [
+            "aws",
+            "cloudformation",
+            "delete-stack",
+            "--stack-name",
+            self.stack_name,
+        ]
+        res = subprocess.run(cmd, stdout=subprocess.PIPE)
+        return res.returncode == 0
+
     def get_env_vars(self) -> dict:
         env_vars = {}
         env_file = Path(os.path.join(self.config_dir, ".env"))

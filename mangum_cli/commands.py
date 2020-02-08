@@ -183,6 +183,20 @@ def validate() -> None:
 
 
 @mangum_cli.command()
+def delete() -> None:
+    """
+    Delete the CloudFormation stack.
+    """
+    config = get_config()
+    click.echo("Delete your stack! This may take some time...")
+    deleted = config.delete()
+    if not deleted:
+        click.echo("There was an error...")
+    else:
+        click.echo("Deletion successful!")
+
+
+@mangum_cli.command()
 def describe() -> None:
     """
     Retrieve the endpoints for the deployment.
