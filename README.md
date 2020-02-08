@@ -26,6 +26,8 @@ pip install mangum-cli
 
 `mangum validate` - Validate the AWS CloudFormation template.
 
+`mangum delete` - Delete the CloudFormation stack.
+
 ## Tutorial
 
 The steps below outline a basic [FastAPI](https://fastapi.tiangolo.com/) deployment, however you should be able to use any ASGI framework/application with the adapter.
@@ -127,3 +129,11 @@ mangum deploy
 ```
 
 This wraps the AWS CLI's `deploy` command. It may take a few minutes to complete. If successful, the endpoints for the deployed application will be displayed in the console.
+
+### Step 6 - Delete CloudFormation stack
+
+Run the following command to delete the CloudFormation stack:
+
+```shell
+mangum delete
+```
