@@ -84,10 +84,10 @@ fastapi
 
 ### Step 2 - Create a new deployment configuration
     
-Run the following command with a name for the project (required) and optionally include the name of an S3 bucket and the region (these values can be changed later):
+Run the following command with a name for the project (required) and optionally include the name of an S3 bucket, the region and the runtime version (these values can be changed later):
 
 ```shell
-mangum init <name> [bucket-name] [region-name]
+mangum init <name> [bucket-name] [region-name] [runtime]
 ```
 
 After defining the configuration a `mangum.yml` file will be generated, the current directory should now look this:
