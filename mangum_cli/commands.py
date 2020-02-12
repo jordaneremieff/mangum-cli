@@ -1,12 +1,13 @@
 import os
+import re
+import sys
 import uuid
 
-import yaml
-from botocore.exceptions import ClientError
 import boto3
 import click
+from botocore.exceptions import ClientError
 
-
+import yaml
 from mangum_cli.config import Config
 
 
@@ -78,6 +79,15 @@ def init(
         --dynamodb-access/--no-dynamodb-access
             Specify if the CF template should include DynamoDB access (full access to all db)
     """
+    if((re.compile(r'^[a-zA-Z][a-zA-Z-]+$').match(name) is not None) and len(name) <= 128):
+        pass
+    else:
+        click.echo('*** WARNING ***')
+        click.echo('Illegal stack name.')
+        click.echo('A stack name can contain only alphanumeric characters (case-sensitive) and hyphens.')
+        click.echo('It must start with an alphabetic character and can\'t be longer than 128 characters.')
+        click.echo('(https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-using-console-create-stack-parameters.html)')
+        click.echo('')
     click.echo("Generating initial configuration...")
     config_dir = os.getcwd()
     config = {
@@ -97,7 +107,7 @@ def init(
         f.write(config_data)
     with open(os.path.join(config_dir, "requirements.txt"), "a") as f:
         f.write("mangum\n")
-    click.echo(f"Configuration saved to: {config_dir}")
+    click.echo(f"Configuration saved to: {config_dir}/mangum.yml")
 
 
 @mangum_cli.command()
