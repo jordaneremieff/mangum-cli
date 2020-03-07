@@ -124,7 +124,6 @@ def build(no_pip: bool = False) -> None:
     """
     config = get_config()
     config.build(no_pip=no_pip)
-    click.echo("Build complete!")
 
 
 @mangum_cli.command()
@@ -162,12 +161,7 @@ def package() -> None:
     Package the local build.
     """
     config = get_config()
-    click.echo("Packaging your application...")
-    res = config.package()
-    if not res:
-        click.echo("There was an error...")
-    else:
-        click.echo("Successfully packaged. Run 'mangum deploy' to deploy it now.")
+    config.package()
 
 
 @mangum_cli.command()
@@ -176,13 +170,21 @@ def deploy() -> None:
     Deploy the packaged project.
     """
     config = get_config()
-    click.echo("Deploying your application! This may take some time...")
-    deployed = config.deploy()
-    if not deployed:
-        click.echo("There was an error...")
-    else:
-        endpoints = config.describe()
-        click.echo(f"Deployment successful! API endpoints available at:\n\n{endpoints}")
+    config.deploy()
+    config.describe()
+
+
+@mangum_cli.command()
+@click.option("--no-pip", default=False, is_flag=True)
+def all(no_pip: bool = False) -> None:
+    """
+    Build, Package, and Deploy.
+    """
+    config = get_config()
+    config.build(no_pip=no_pip)
+    config.package()
+    config.deploy()
+    config.describe()
 
 
 @mangum_cli.command()
@@ -191,11 +193,7 @@ def validate() -> None:
     Validate the AWS CloudFormation template.
     """
     config = get_config()
-    res = config.validate()
-    if res is not None:
-        click.echo(f"Template Error: {res}")
-    else:
-        click.echo("Template is valid!")
+    config.validate()
 
 
 @mangum_cli.command()
@@ -204,12 +202,7 @@ def delete() -> None:
     Delete the CloudFormation stack.
     """
     config = get_config()
-    click.echo("Delete your stack! This may take some time...")
-    deleted = config.delete()
-    if not deleted:
-        click.echo("There was an error...")
-    else:
-        click.echo("Deletion successful!")
+    config.delete()
 
 
 @mangum_cli.command()
@@ -218,13 +211,7 @@ def describe() -> None:
     Retrieve the endpoints for the deployment.
     """
     config = get_config()
-    output = config.describe()
-    if not output:
-        click.echo("Error! Could not retrieve endpoints.")
-    else:
-        click.echo(f"API endpoints available at:\n\n")
-        for k, v in output.items():
-            click.echo(f"{k}\n{v}\n")
+    config.describe()
 
 
 # @mangum_cli.command()

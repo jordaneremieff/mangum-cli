@@ -90,8 +90,10 @@ class Config:
                 if not os.path.isdir(target_path.parent):
                     os.makedirs(target_path.parent)
                 shutil.copyfile(file_path, target_path)
+        self.logger.info('Build complete!')
 
-    def package(self) -> bool:
+    def package(self) -> None:
+        self.logger.info('Packaging your application...')
         template_yml = yaml.dump(
             self.template, default_flow_style=False, sort_keys=False
         )
@@ -111,9 +113,13 @@ class Config:
             self.bucket_name,
         ]
         res = subprocess.run(cmd, stdout=subprocess.PIPE)
-        return res.returncode == 0
+        if not res:
+            self.logger.error('There was an error...')
+            sys.exit(1)
+        self.logger.info('Successfully packaged.')
 
-    def deploy(self) -> bool:
+    def deploy(self) -> None:
+        self.logger.info('Deploying your application! This may take some time...')
         cmd = [
             "aws",
             "cloudformation",
@@ -126,7 +132,10 @@ class Config:
             "CAPABILITY_IAM",
         ]
         res = subprocess.run(cmd, stdout=subprocess.PIPE)
-        return res.returncode == 0
+        if not res:
+            self.logger.error('There was an error...')
+            sys.exit(1)
+        self.logger.info('Deployment successful!')
 
     def describe(self) -> dict:  # pragma: no cover
         cmd = [
@@ -155,17 +164,23 @@ class Config:
                     output[output_key] = "\n".join(
                         [output_val, output_val.replace("Prod", "Stage")]
                     )
-        return output
+        if not output:
+            self.logger.error('Error! Could not retrieve endpoints.')
+            sys.exit(1)
+        self.logger.info('API endpoints available at:')
+        for k, v in output.items():
+            self.logger.info(f'{k}\n{v}\n')
 
     def validate(self) -> typing.Union[None, str]:
         client = boto3.client("cloudformation")
         try:
             client.validate_template(TemplateBody=json.dumps(self.template))
         except Exception as exc:
-            return str(exc)
-        return None
+            self.logger.error(f'Template Error: {exc}')
+        self.logger.info('Template is valid!')
 
     def delete(self) -> bool:
+        self.logger.info('Delete your stack! This may take some time...')
         cmd = [
             "aws",
             "cloudformation",
@@ -174,7 +189,12 @@ class Config:
             self.stack_name,
         ]
         res = subprocess.run(cmd, stdout=subprocess.PIPE)
-        return res.returncode == 0
+        if not res:
+            self.logger.error('There was an error...')
+            return False
+        else:
+            self.logger.info('Deletion successful!')
+            return True
 
     def get_env_vars(self) -> dict:
         env_vars = {}
