@@ -22,6 +22,8 @@ pip install mangum-cli
 
 `mangum package` -  Package the local build.
 
+`mangum all` - `build`, `package`, and `deploy`.
+
 `mangum describe` -  Retrieve the endpoints for the deployment.
 
 `mangum validate` - Validate the AWS CloudFormation template.
@@ -136,4 +138,12 @@ Run the following command to delete the CloudFormation stack:
 
 ```shell
 mangum delete
+```
+
+### Appendix - `build`, `package`, and `deploy`:
+
+If you want to execute build, package, and deploy sequentially, do as follows:
+
+```shell
+mangum all
 ```
