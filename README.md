@@ -2,7 +2,7 @@
 
 This package provides a command-line interface for generating AWS Lambda & API Gateway deployments used with [Mangum](https://github.com/erm/mangum).
 
-**Note**: This is a heavy work-in-progress, and it may be removed/changed at any point.
+**Note**: This is a work-in-progress. PRs welcomed.
 
 **Requirements**: Python3.7+
 
