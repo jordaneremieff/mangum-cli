@@ -15,7 +15,7 @@ setup(
     url="https://github.com/erm/mangum-cli",
     description="CLI tools for Mangum",
     long_description=get_long_description(),
-    install_requires=["awscli", "boto3", "click"],
+    install_requires=["awscli", "boto3", "click", "click_completion"],
     entry_points={"console_scripts": ["mangum = mangum_cli.__main__:main"]},
     long_description_content_type="text/markdown",
     author="Jordan Eremieff",

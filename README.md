@@ -140,7 +140,23 @@ Run the following command to delete the CloudFormation stack:
 mangum delete
 ```
 
-### Appendix - `build`, `package`, and `deploy`:
+### Appendix.A - Enable shell completion.
+
+You can enable shell completion by running the install option.
+
+```shell
+mangum complement bash
+```
+
+Candidates can be displayed by pressing the tab key.
+
+```sh
+$ mangum [TAB][TAB]
+all            complement     delete         describe       package
+build          create-bucket  deploy         init           validate
+```
+
+### Appendix.B - `build`, `package`, and `deploy`.
 
 If you want to execute build, package, and deploy sequentially, do as follows:
 
